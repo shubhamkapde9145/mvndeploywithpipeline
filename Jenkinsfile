@@ -1,36 +1,20 @@
 pipeline {
     agent any
 
-    tools {
-        jdk 'JDK17'
-        maven 'Maven'
-    }
-
     stages {
-
-        stage('Debug') {
-            steps {
-                sh 'java -version'
-                sh 'mvn -version'
-                sh 'which java'
-                sh 'which mvn'
-            }
-        }
-
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                // Get some code from a GitHub repository
+                git branch: 'dependabot/maven/junit-junit-4.13.1', url: 'https://github.com/Girish-154/simpleMavenJunit.git'
+
+    
+                sh 'mvn clean'
+                sh 'mvn test'
+                sh 'mvn compile'
+                sh 'mvn package'
+            }
+
+         
             }
         }
-
     }
-
-    post {
-        success {
-            echo 'Build Successful'
-        }
-        failure {
-            echo 'Build Failed'
-        }
-    }
-}
