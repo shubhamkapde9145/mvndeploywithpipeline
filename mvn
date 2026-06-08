@@ -1,38 +1,23 @@
-name: Maven Build
+pipeline {
+    agent any
 
-on:
-  push:
-    branches:
-      - main
-      - master
+    tools {
+        maven 'Maven'
+    }
 
-  pull_request:
-    branches:
-      - main
-      - master
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-
-      - name: Verify Maven
-        run: mvn -version
-
-      - name: Build Project
-        run: mvn clean install
-
-      - name: Run Tests
-        run: mvn test
-
-      - name: Package Application
-        run: mvn package
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+stage('Debug') {
+    steps {
+        sh 'whoami'
+        sh 'echo $PATH'
+        sh 'which mvn'
+        sh 'mvn -version'
+    }
+}
+}
